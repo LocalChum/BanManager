@@ -17,7 +17,10 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 
 import java.sql.SQLException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,6 +28,8 @@ public class JoinListener extends Listeners<BanManager> {
 
   @EventHandler(priority = EventPriority.HIGHEST)
   public void banCheck(final AsyncPlayerPreLoginEvent event) {
+    SimpleDateFormat format = new SimpleDateFormat(Message.get("dateformat").toString());
+
     if (plugin.getIpRangeBanStorage().isBanned(event.getAddress())) {
       IpRangeBanData data = plugin.getIpRangeBanStorage().getBan(event.getAddress());
 
@@ -50,6 +55,7 @@ public class JoinListener extends Listeners<BanManager> {
       message.set("ip", event.getAddress().toString());
       message.set("reason", data.getReason());
       message.set("actor", data.getActor().getName());
+      message.set("created", format.format(data.getCreated() * 1000));
 
       event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
       event.setKickMessage(message.toString());
@@ -81,6 +87,7 @@ public class JoinListener extends Listeners<BanManager> {
       message.set("ip", event.getAddress().toString());
       message.set("reason", data.getReason());
       message.set("actor", data.getActor().getName());
+      message.set("created", format.format(data.getCreated() * 1000));
 
       event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
       event.setKickMessage(message.toString());
@@ -116,6 +123,7 @@ public class JoinListener extends Listeners<BanManager> {
     message.set("player", data.getPlayer().getName());
     message.set("reason", data.getReason());
     message.set("actor", data.getActor().getName());
+    message.set("created", format.format(data.getCreated() * 1000));
 
     event.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_BANNED);
     event.setKickMessage(message.toString());
@@ -232,7 +240,7 @@ public class JoinListener extends Listeners<BanManager> {
     }
 
     if (plugin.getConfiguration().getMaxOnlinePerIp() > 0) {
-      long ip = IPUtils.toLong(event.getPlayer().getAddress().getAddress());
+      long ip = IPUtils.toLong(event.getAddress());
       int count = 1;
 
       for (Player player : plugin.getServer().getOnlinePlayers()) {
