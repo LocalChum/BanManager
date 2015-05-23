@@ -17,12 +17,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class BanListener extends Listeners<BanManager> {
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void notifyOnBan(PlayerBanEvent event) {
+    SimpleDateFormat format = new SimpleDateFormat(Message.get("dateformat").toString());
+
     PlayerBanData ban = event.getBan();
 
     String broadcastPermission;
@@ -38,7 +41,7 @@ public class BanListener extends Listeners<BanManager> {
     }
 
     message.set("player", ban.getPlayer().getName()).set("actor", ban.getActor().getName())
-           .set("reason", ban.getReason());
+           .set("reason", ban.getReason()).set("created", format.format(ban.getCreated()));
 
     if (!event.isSilent()) {
       CommandUtils.broadcast(message.toString(), broadcastPermission);
@@ -58,6 +61,8 @@ public class BanListener extends Listeners<BanManager> {
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void notifyOnIpBan(IpBanEvent event) {
+    SimpleDateFormat format = new SimpleDateFormat(Message.get("dateformat").toString());
+
     IpBanData ban = event.getBan();
 
     String broadcastPermission;
@@ -85,7 +90,8 @@ public class BanListener extends Listeners<BanManager> {
 
     message.set("ip", IPUtils.toString(ban.getIp())).set("actor", ban.getActor().getName())
            .set("reason", ban.getReason())
-           .set("players", playerNames.toString());
+           .set("players", playerNames.toString())
+           .set("created", format.format(ban.getCreated()));
 
     if (!event.isSilent()) {
       CommandUtils.broadcast(message.toString(), broadcastPermission);
@@ -105,6 +111,8 @@ public class BanListener extends Listeners<BanManager> {
 
   @EventHandler(ignoreCancelled = true, priority = EventPriority.MONITOR)
   public void notifyOnIpRangeBan(IpRangeBanEvent event) {
+    SimpleDateFormat format = new SimpleDateFormat(Message.get("dateformat").toString());
+
     IpRangeBanData ban = event.getBan();
 
     String broadcastPermission;
@@ -122,7 +130,8 @@ public class BanListener extends Listeners<BanManager> {
     message.set("from", IPUtils.toString(ban.getFromIp()))
            .set("to", IPUtils.toString(ban.getToIp()))
            .set("actor", ban.getActor().getName())
-           .set("reason", ban.getReason());
+           .set("reason", ban.getReason())
+           .set("created", format.format(ban.getCreated()));
 
     if (!event.isSilent()) {
       CommandUtils.broadcast(message.toString(), broadcastPermission);

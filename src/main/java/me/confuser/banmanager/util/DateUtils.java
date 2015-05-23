@@ -60,7 +60,7 @@ public class DateUtils {
 
             String diff = sb.toString();
 
-            return diff.isEmpty() ? Message.getString("time.now") : diff;
+            return diff.isEmpty() ? Message.getString("time.now") : diff.trim();
       }
 
       public static String getDifferenceFormat(long timestamp) {

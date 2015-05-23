@@ -12,6 +12,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 public class BanCommand extends AutoCompleteNameTabCommand<BanManager> {
@@ -166,6 +168,7 @@ public class BanCommand extends AutoCompleteNameTabCommand<BanManager> {
                                            .set("displayName", bukkitPlayer.getDisplayName())
                                            .set("player", player.getName())
                                            .set("reason", ban.getReason())
+                                           .set("created", new SimpleDateFormat(Message.get("dateformat").toString()).format(new Date()))
                                            .set("actor", actor.getName());
 
               bukkitPlayer.kickPlayer(kickMessage.toString());
